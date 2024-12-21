@@ -1,4 +1,5 @@
 import sqlite3
+import sys
 
 conn = sqlite3.connect('translations.db')
 cursor = conn.cursor()
@@ -35,15 +36,23 @@ def get_pairs():
     cursor.execute('SELECT * FROM word_pairs')
     return cursor.fetchall()
 
-while True:
-    table = input('Enter table name: ')
-    source = input('Enter source word: ')
-    target = input('Enter target word: ')
+def get_target(source):
+    source = (source,)
+    cursor.execute('SELECT target_word FROM word_pairs WHERE source_word = ?', source)
+    return cursor.fetchone()
 
-    if table == 'phrases':
-        add_phrase(source, target)
-        print(get_phrases())
-    elif table == 'word_pairs':
-        add_pair(source, target)
-        print(get_pairs())
+# while True:
+#     table = input('Enter table name: ')
+#     source = input('Enter source word: ')
+#     target = input('Enter target word: ')
+# 
+#     if table == 'phrases':
+#         add_phrase(source, target)
+#         print(get_phrases())
+#     elif table == 'word_pairs':
+#         add_pair(source, target)
+#         print(get_pairs())
 
+source_arg = sys.argv[1]
+
+print(get_target(source_arg))
